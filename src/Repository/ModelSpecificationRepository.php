@@ -22,12 +22,12 @@ class ModelSpecificationRepository extends ServiceEntityRepository
     /**
      * @var ConditionManager
      */
-    private $pqbManager;
+    private $conditionManager;
 
     public function __construct(ManagerRegistry $registry, ConditionManager $manager)
     {
         parent::__construct($registry, ModelSpecification::class);
-        $this->pqbManager = $manager;
+        $this->conditionManager = $manager;
     }
 
     public function findByOrderBy(QueryFilterArgs $args): QueryResult
@@ -37,7 +37,7 @@ class ModelSpecificationRepository extends ServiceEntityRepository
             ->setFirstResult($args->getOffset())
             ->setMaxResults($args->getLimit());
 
-        $proxyQb = new ProxyQueryBuilder($qb, $this->pqbManager);
+        $proxyQb = new ProxyQueryBuilder($qb, $this->conditionManager);
         $qb = $proxyQb->getSortedAndFilteredQueryBuilder($args->getSearchBy(), $args->getSortBy());
         $query = $qb->getQuery();
         $paginator = new Paginator($query);

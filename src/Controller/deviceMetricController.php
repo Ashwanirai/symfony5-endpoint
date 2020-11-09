@@ -12,7 +12,6 @@ use App\Repository\ModelSpecificationRepository;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @ApiResource()
  * Class deviceMetricController
  * @package App\Controller
  */
@@ -35,16 +34,13 @@ class deviceMetricController extends AbstractController
         $config->setSortCols(['d.id'], ['d.id' => 'asc']);
         $config->setRequest(new Request($request));
 
-        // Throws an UnexpectedValueException when invalid filter column, sort column or sort type is specified
+        //Will Throws an UnexpectedValueException when invalid filter column, sort column or sort type is specified
         $config->setStrictColumns(true);
 
-        // here we provide a repository callback that will be used internally in the QueryFilter
-        // The signature of the method must be as follows: function functionName(QueryFilterArgs $args): QueryResult;
         $config->setRepositoryCallback([$repository, 'findByOrderBy']);
 
-        // Response must implement Artprima\QueryFilterBundle\Response\ResponseInterface
         $queryFilter = new QueryFilter(Response::class);
-        /** @var Response $data the type of the variable is defined by the class in the first argument of QueryFilter's constructor */
+        /** @var Response $data the type of the variable */
         $response = $queryFilter->getData($config);
         $data = $response->getData();
         $meta = $response->getMeta();
